@@ -14,6 +14,7 @@ export interface ErrorBoundaryStore {
 export const ERROR_CONTEXT = /*#__PURE__*/ createContextId<ErrorBoundaryStore>('qk-error');
 
 export const handleError = (err: any, hostElement: QwikElement, rCtx: RenderContext) => {
+  console.error('handle-error', err, hostElement, rCtx);
   const elCtx = tryGetContext(hostElement)!;
   if (qDev) {
     // Clean vdom

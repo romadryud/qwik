@@ -49,9 +49,12 @@ export function createQwikCity(opts: QwikCityNodeRequestOptions) {
         opts.getClientConn
       );
       const handled = await requestHandler(serverRequestEv, opts, qwikSerializer);
+      console.error('elo 1');
       if (handled) {
         const err = await handled.completion;
         if (err) {
+          console.error('elo 2');
+
           throw err;
         }
         if (handled.requestEv.headersSent) {
@@ -60,6 +63,7 @@ export function createQwikCity(opts: QwikCityNodeRequestOptions) {
       }
       next();
     } catch (e) {
+      console.error('elo 3');
       console.error(e);
       next(e);
     }
