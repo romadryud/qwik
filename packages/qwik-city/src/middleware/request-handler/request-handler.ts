@@ -27,6 +27,7 @@ export async function requestHandler<T = unknown>(
   );
   if (routeAndHandlers) {
     const [route, requestHandlers] = routeAndHandlers;
+    console.error({ route, requestHandlers });
     return runQwikCity(
       serverRequestEv,
       route,

@@ -67,6 +67,7 @@ async function runNext(requestEv: RequestEventInternal, resolve: (value: any) =>
     // Run all middlewares
     await requestEv.next();
   } catch (e) {
+    console.error('runNext', e, requestEv.url);
     if (e instanceof RedirectMessage) {
       const stream = requestEv.getWritableStream();
       await stream.close();
@@ -77,10 +78,12 @@ async function runNext(requestEv: RequestEventInternal, resolve: (value: any) =>
         if (accept && !accept.includes('text/html')) {
           const qwikSerializer = requestEv[RequestEvQwikSerializer];
           requestEv.headers.set('Content-Type', 'application/qwik-json');
+          console.error('runNext 1', status, e.data);
           requestEv.send(status, await qwikSerializer._serializeData(e.data, true));
         } else {
           const html = getErrorHtml(e.status, e.data);
           requestEv.html(status, html);
+          console.error('runNext 2', status, e.data);
         }
       }
     } else if (!(e instanceof AbortMessage)) {
@@ -101,6 +104,8 @@ async function runNext(requestEv: RequestEventInternal, resolve: (value: any) =>
           console.error('Unable to render error page');
         }
       }
+
+      console.error('nothing catched');
       return e;
     }
   } finally {

@@ -426,6 +426,7 @@ The request origin "${inputOrigin}" does not match the server origin "${origin}"
   }
 }
 export function renderQwikMiddleware(render: Render) {
+  console.error('renderQwikMiddleware');
   return async (requestEv: RequestEvent) => {
     if (requestEv.headersSent) {
       return;
@@ -441,6 +442,7 @@ export function renderQwikMiddleware(render: Render) {
     if (!responseHeaders.has('Content-Type')) {
       responseHeaders.set('Content-Type', 'text/html; charset=utf-8');
     }
+    console.error('here');
 
     const trailingSlash = getRequestTrailingSlash(requestEv);
     const { readable, writable } = new TextEncoderStream();
@@ -448,6 +450,8 @@ export function renderQwikMiddleware(render: Render) {
     const pipe = readable.pipeTo(writableStream, { preventClose: true });
     const stream = writable.getWriter();
     const status = requestEv.status();
+
+    console.error({ status });
     try {
       const isStatic = getRequestMode(requestEv) === 'static';
       const serverData = getQwikCityServerData(requestEv);
@@ -472,6 +476,8 @@ export function renderQwikMiddleware(render: Render) {
         await stream.write((result as any as RenderToStringResult).html);
       }
       requestEv.sharedMap.set('qData', qData);
+    } catch (e) {
+      console.error('elo', e);
     } finally {
       await stream.ready;
       await stream.close();
